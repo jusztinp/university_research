@@ -1,24 +1,23 @@
-function [results] = malik(img)
+function [actualPart] = malik(img, doWithFigures)
 
 results =  [];
-[r g b y] = malik_preProcessing(img);
+[r] = malik_preProcessing(img);
 
 dimensions = size(r);
-r=imgaussfilt(r);
-logicalImg = logical(mod(r,2));
 
-labeledImg = bwlabel(logicalImg);
+labeledImg = bwlabel(r);
 
 numberOfLabels = size(unique(labeledImg))-1;
-
-figure, imshow(img), hold on
-
+if doWithFigures
+    figure, imshow(img), hold on
+end
 constAspectRatio = 0.65;
 constMaxHeight = dimensions(1) * .90;
-constMinHeight = dimensions(1) * .05;
+constMinHeight = dimensions(1) * .03;
 
 constMaxWidth = dimensions(2) * .90;
-constMinWidth= dimensions(2) * .05;
+constMinWidth= dimensions(2) * .03;
+
 
     for i=1:numberOfLabels
         bounds = regionprops(labeledImg == i, 'BoundingBox');
@@ -33,15 +32,27 @@ constMinWidth= dimensions(2) * .05;
            && actualHeight < constMaxHeight && actualHeight > constMinHeight ...
            && actualWidth < constMaxWidth && actualWidth > constMinWidth
        
-            rectangle('Position', bounds.BoundingBox, 'EdgeColor','r','LineWidth',2);  
-            results = cat(3, results ,bounds.BoundingBox);  
+            binaryImage = imcrop(r, bounds.BoundingBox);
+            
+            %[centers, radii] = imfindcircles(binaryImage, [actualWidth*2/3 actualWidth]);
+            %[H, theta, rho] = hough(binaryImage);
+            %P = houghpeaks(H, 5, 'threshold', ceil(0.3*max(H(:))));
+            %lines = houghlines(binaryImage, theta, rho, P, 'FillGap,'5,'MinLength',7);
+            
+            if doWithFigures
+                rectangle('Position', bounds.BoundingBox, 'EdgeColor','r','LineWidth',2); hold on  
+            end
+            
             actualPart = imresize(imcrop(r, bounds.BoundingBox), [128 128]);
             
-            figure, imshow(actualPart), hold on
+            if doWithFigures
+                figure, imshow(actualPart), hold on
+            end
+            
             points = detectSURFFeatures(actualPart);
-            [features, valid_points] = extractFeatures(actualPart, points);
-            plot(valid_points.selectStrongest(6), 'showOrientation', true);
+            
         end
     end
-
+    
+    
 end
