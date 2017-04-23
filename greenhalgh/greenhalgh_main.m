@@ -1,9 +1,12 @@
-function [features] = greenhalgh_main(img)
+function [features] = greenhalgh_main(img, model)
 
 imshow(img);
 %%
 normalized = greenhalgh_normalize(img);
-connectedComponents = greenhalgh_mser(normalized);
+figure, imshow(normalized, []);
+
+threshold = 40;
+connectedComponents = greenhalgh_mser(normalized, threshold);
 
 %%
 tblBounds = regionprops('table',connectedComponents, 'BoundingBox');
@@ -15,11 +18,11 @@ perimeter = struct2array(strctPerimeter);
 
 constAspectRatio = 0.6;
 
-constMaxHeight = 110;
-constMinHeight = 14;
+constMaxHeight = 410;
+constMinHeight = 24;
 
-constMaxWidth = 100;
-constMinWidth= 14;
+constMaxWidth = 400;
+constMinWidth= 24;
 
 constMaxAreaPerBoundsAreaRatio = 1;
 constMinAreaPerBoundsAreaRatio = 0.4;
@@ -29,7 +32,7 @@ constMinPerimeterRatio =  0.3;
 
 bounds = table2array(tblBounds);
 %%
-
+disp(size(bounds,1));
 for i=1:size(bounds,1)
     
     boundingBox = bounds(i,:);
@@ -42,7 +45,7 @@ for i=1:size(bounds,1)
     
     actualPerimeterRatio = perimeter(i) / (2*(actualHeight+actualWidth));
         
-    %disp([actualAreaPerBoundsArea actualPerimeterRatio aspectRatio]);
+    %rectangle('Position', boundingBox, 'EdgeColor', 'b', 'LineWidth',2);
     
     if aspectRatio > constAspectRatio && aspectRatio < (1/constAspectRatio) ...
         && actualHeight < constMaxHeight && actualHeight > constMinHeight ...
@@ -52,11 +55,19 @@ for i=1:size(bounds,1)
         && actualPerimeterRatio < constMaxPerimeterRatio...
         && actualPerimeterRatio > constMinPerimeterRatio
     
+    disp([boundingBox(1:2) actualAreaPerBoundsAreaRatio actualPerimeterRatio aspectRatio]);
+    
         rectangle('Position', boundingBox, 'EdgeColor', 'r', 'LineWidth',2);
         tmp = imcrop(normalized, boundingBox);
+        tmp = imresize(tmp,[128 128]);
+        figure, imshow(tmp);
+        
         %get hog features
-        [features, vis]= extractHOGFeatures(tmp, 'CellSize', [8 8], 'BlockSize', [4 4],'NumBins',9);
+        [features, vis]= extractHOGFeatures(tmp, 'CellSize', [8 8], 'BlockSize', [2 2],'NumBins',9);
         figure, plot(vis);
+        
+        label = predict(model, features);
+        disp(label);
         %TODO : get shape by shaperecognizer
         
         %TODO : get table by tablerecognizer

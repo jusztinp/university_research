@@ -1,6 +1,6 @@
 function [] = match_surfFeatures(img1, img2)
 
-%img1 = imresize(img1,[128 128]);
+%img1 = imresize(img1,[128 128])
 %img2 = imresize(img2,[128 128]);
 bin1 = malik_preProcessing(img1);
 bin2 = malik_preProcessing(img2);
