@@ -1,4 +1,4 @@
-function [cr] = own_derivingColorConvert(img)
+function [cr, cb, cy] = own_derivingColorConvert(img)
 
 red = img(:,:,1);
 green = img(:,:,2);
@@ -17,8 +17,8 @@ cb = max(0, ...
 cy = max(0, ...
          min(((red - blue)./normalizedFactor), ...
              ((green - blue)./normalizedFactor)));
-
-cr = imgaussfilt(cr);
+figure, imshow(cr,[]);
+cr = imgaussfilt(cr,1.5);
 cb = imgaussfilt(cb);
 cy = imgaussfilt(cy);      
 

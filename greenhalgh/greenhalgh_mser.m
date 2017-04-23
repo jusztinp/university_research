@@ -1,7 +1,6 @@
-function [connectedComponents] = greenhalgh_mser(img)
+function [connectedComponents] = greenhalgh_mser(img, threshold)
 %img : blue-red normalized img
 
-threshold = 24;
 thresholdDelta = ceil(255/threshold);
 
 

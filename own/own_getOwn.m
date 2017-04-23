@@ -10,8 +10,11 @@ height = size(img,2);
 for part = 1:level
     
     lvlResult = [];
-    
+        visualize = zeros(width, height,3);
         for i = 1:part
+            
+            
+            
             for j = 1:part
                 
                 wSize = width / part;
@@ -29,12 +32,13 @@ for part = 1:level
                 actualDominantChannels = [RSum GSum BSum] == max([RSum GSum BSum]);
                 
                 dominantChannelsCodeSum = uint8(redGreenBlueCode * actualDominantChannels');
-                
                 lvlResult = cat(2, lvlResult, dominantChannelsCodeSum);
                 
+                visualize(x,y,actualDominantChannels) = 255;
             end
+         
         end
-
+        imshow(visualize);
     
     %lvlResult = sort(lvlResult);
     result = cat(2,result, lvlResult);
