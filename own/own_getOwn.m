@@ -25,16 +25,27 @@ for part = 1:level
                 
                 imgWindow = img(x,y,:);
                 
-                RSum = sum(sum(imgWindow(:,:,1)));
-                GSum = sum(sum(imgWindow(:,:,2)));
-                BSum = sum(sum(imgWindow(:,:,3)));
+                %51 is the magic number, because it divides the 8bit int value
+                %to five different part
+                Rm = uint8(mean(mean(imgWindow(:,:,1)))/51);
+                Gm = uint8(mean(mean(imgWindow(:,:,2)))/51);
+                Bm = uint8(mean(mean(imgWindow(:,:,3)))/51);
                 
-                actualDominantChannels = [RSum GSum BSum] == max([RSum GSum BSum]);
+                if Rm == Gm && Gm == Bm && Bm == Rm ...
+                       && Rm < 2
+                        actualDominantChannels = [ 0 0 0 ];
+                else
+                
+                        actualDominantChannels = [Rm Gm Bm] == max([Rm Gm Bm]);
+                
+                end
                 
                 dominantChannelsCodeSum = uint8(redGreenBlueCode * actualDominantChannels');
                 lvlResult = cat(2, lvlResult, dominantChannelsCodeSum);
                 
-                visualize(x,y,actualDominantChannels) = 255;
+                if sum(actualDominantChannels)>0
+                    visualize(x,y,actualDominantChannels) = 255;
+                end
             end
          
         end
