@@ -12,6 +12,7 @@ for i=1:numel(imgSets)
     count = tmpSet.Count;
     for j=1:count
        img = read(tmpSet,j);
+       imshow(img);
        features = own_getOwn(img,featureLevel);
        labels{j+(i-1)*count} = tmpSet.Description;
        vectors(j+(i-1)*count,:) = features;

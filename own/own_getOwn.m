@@ -1,11 +1,17 @@
 function [result] = own_getOwn(img, level)
-
+tic
 redGreenBlueCode = [1 2 4];
 
 result = [];
 
 width = size(img,1);
 height = size(img,2);
+
+while width < level && height < level 
+    img = imresize(img, 2);
+    width = size(img,1);
+    height = size(img,2);
+end
 
 for part = 1:level
     
@@ -25,11 +31,11 @@ for part = 1:level
                 
                 imgWindow = img(x,y,:);
                 
-                %51 is the magic number, because it divides the 8bit int value
-                %to five different part
-                Rm = uint8(mean(mean(imgWindow(:,:,1)))/51);
-                Gm = uint8(mean(mean(imgWindow(:,:,2)))/51);
-                Bm = uint8(mean(mean(imgWindow(:,:,3)))/51);
+                %32 is the magic number, because it divides the 8bit int value
+                %to 8 different part
+                Rm = uint8(mean(mean(imgWindow(:,:,1)))/32);
+                Gm = uint8(mean(mean(imgWindow(:,:,2)))/32);
+                Bm = uint8(mean(mean(imgWindow(:,:,3)))/32);
                 
                 if Rm == Gm && Gm == Bm && Bm == Rm ...
                        && Rm < 2
@@ -49,10 +55,11 @@ for part = 1:level
             end
          
         end
-        imshow(visualize);
+        
+        %figure, imshow(visualize);
     
     %lvlResult = sort(lvlResult);
     result = cat(2,result, lvlResult);
 end
-
+toc
 end

@@ -1,15 +1,16 @@
 function []=own_main(img, model)
+tic
 %% Segmentation vol.1
 %segm = own_segmentInHSV(img);
 %% Segmentation vol.2
 [red, blue, yellow] = own_segmentInHSV(img);
-%own_derivingColorConvert(img);
+%[red, blue, yellow] = own_derivingColorConvert(img);
 
 figure, imshow(img), hold on;
 
 own_onChannel(red, img, model);
 own_onChannel(blue, img, model);
-own_onChannel(yellow, img, model);
+%own_onChannel(yellow, img, model);
 
 end
 
@@ -27,11 +28,11 @@ numberOfLabels = size(unique(labeledImg))-1;
 %%
 dimensions = size(img);
 constAspectRatio = 0.65;
-constMaxHeight = dimensions(1) * .97;
-constMinHeight = dimensions(1) * .03;
+constMaxHeight = dimensions(1) * .50;
+constMinHeight = dimensions(1) * .05;
 
-constMaxWidth = dimensions(2) * .97;
-constMinWidth= dimensions(2) * .03;
+constMaxWidth = dimensions(2) * .5;
+constMinWidth= dimensions(2) * .05;
 
 %marking with bounding box
 disp(numberOfLabels);
@@ -62,5 +63,5 @@ for i=1:numberOfLabels
 		
 	end
 end
-
+toc
 end

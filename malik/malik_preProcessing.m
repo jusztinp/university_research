@@ -7,7 +7,7 @@ rSegmented = zeros(size(img, 1), size(img, 2));
 bSegmented = zeros(size(img, 1), size(img, 2));
 ySegmented = zeros(size(img, 1), size(img, 2));
     
-rSegmented((hsi(:,:,1)<0.06 | hsi(:,:,1)>0.75) & hsi(:,:,2)>0.4 & hsi(:,:,3) > 0.2) =1;
+rSegmented((hsi(:,:,1)<0.06 | hsi(:,:,1)>0.95) & hsi(:,:,2)>0.4 & hsi(:,:,3) > 0.2) =1;
 rSegmented = filterAndBinarize(rSegmented);
 
 %figure, imshow(rSegmented);

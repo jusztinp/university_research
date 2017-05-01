@@ -1,7 +1,7 @@
 function [connectedComponents] = greenhalgh_mser(img, threshold)
 %img : blue-red normalized img
 
-thresholdDelta = ceil(255/threshold);
+thresholdDelta = ceil(100/threshold);
 
 
 [regions, connectedComponents] = detectMSERFeatures(img,'ThresholdDelta',thresholdDelta);

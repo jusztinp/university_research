@@ -17,9 +17,14 @@ cb = max(0, ...
 cy = max(0, ...
          min(((red - blue)./normalizedFactor), ...
              ((green - blue)./normalizedFactor)));
-figure, imshow(cr,[]);
-cr = imgaussfilt(cr,1.5);
-cb = imgaussfilt(cb);
-cy = imgaussfilt(cy);      
+figure, imshow(cr,[]), title('Red');
+figure, imshow(cb,[]), title('Blue');
+figure, imshow(cy,[]), title('Yellow');
+
+sigma =  1.4;
+
+cr = imgaussfilt(cr, sigma);
+cb = imgaussfilt(cb, sigma);
+cy = imgaussfilt(cy, sigma);      
 
 end
