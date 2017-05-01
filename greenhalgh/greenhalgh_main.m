@@ -5,11 +5,14 @@ imshow(img);
 normalized = greenhalgh_normalize(img);
 figure, imshow(normalized, []);
 
-threshold = 40;
-connectedComponents = greenhalgh_mser(normalized, threshold);
+numberOfThresholds = 24;
+connectedComponents = greenhalgh_mser(normalized, numberOfThresholds);
 
 %%
 tblBounds = regionprops('table',connectedComponents, 'BoundingBox');
+for i=1:numel(tblBounds)
+   tblBounds{i,1} = tblBounds{i,1} + [-1 -1 2 2]; 
+end
 strctAreaPerBoundsArea = regionprops(connectedComponents,'Extent');
 strctPerimeter = regionprops(connectedComponents,'Perimeter');
 
@@ -18,7 +21,7 @@ perimeter = struct2array(strctPerimeter);
 
 constAspectRatio = 0.6;
 
-constMaxHeight = 410;
+constMaxHeight = 420;
 constMinHeight = 24;
 
 constMaxWidth = 400;
@@ -55,9 +58,9 @@ for i=1:size(bounds,1)
         && actualPerimeterRatio < constMaxPerimeterRatio...
         && actualPerimeterRatio > constMinPerimeterRatio
     
-    disp([boundingBox(1:2) actualAreaPerBoundsAreaRatio actualPerimeterRatio aspectRatio]);
+    disp([boundingBox(1:2) actualAreaPerBoundsAreaRatio actualPerimeterRatio aspectRatio]) ;
     
-        rectangle('Position', boundingBox, 'EdgeColor', 'r', 'LineWidth',2);
+        %rectangle('Position', boundingBox, 'EdgeColor', 'r', 'LineWidth',4), hold on;
         tmp = imcrop(normalized, boundingBox);
         tmp = imresize(tmp,[128 128]);
         figure, imshow(tmp);

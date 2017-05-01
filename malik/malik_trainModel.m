@@ -14,10 +14,10 @@ imgSets = partition(imgSets, minSetCount, 'randomize');
 [trainingSets, validationSets] = partition(imgSets, 0.7, 'randomize');
 
 %Here we can add custom preprocessing
-featureExtractor = @malik_SURFFeatureExtractor;
-bag = bagOfFeatures(trainingSets, 'CustomExtractor', featureExtractor);
+%featureExtractor = @malik_SURFFeatureExtractor;
+%bag = bagOfFeatures(trainingSets, 'CustomExtractor', featureExtractor);
 
-%bag = bagOfFeatures(trainingSets);
+bag = bagOfFeatures(trainingSets);
 
 classifier = trainImageCategoryClassifier(trainingSets, bag);
 
